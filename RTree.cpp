@@ -49,7 +49,25 @@ struct Rect
     // se usa principalemente en el Delete (FindLeaf), el paper exige que se borre el registro con el mismo rectangulo que se inserto
     bool operator == (const Rect& o) const {return lo == o.lo && hi == o.hi;}
 
-    //
+    //4 isValid()
+    //valida que el rectangulo sea correcto, coordenadas finitas (no NaN ni infinite), lo[d] <= hi[d] en todas las dimensiones
+    //no tener esta funcion es critico ... y porque¿
+    //problema
+    //NaN : Todas las comparaciones dan flase -> se rompe la superposicion y el delete
+    //infinito: infinito - infinito = NaN -> las areas y los enlargement se corrompen
+    // lo > hi es un rectangulo invalodp, area negativa
+
+    bool isValid () const
+    {
+        for(int d = 0; d < DIM; d++)
+        {
+            if(!isfinite(lo[d]) || !isfinite(hi[d]) || lo[d] > hi[d]) return false;
+            return true;
+        }
+    }
+
+
+
 };
 
 class RTree()
