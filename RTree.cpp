@@ -45,6 +45,11 @@ struct Rect
     }
 
 
+    //3 operator: comparar si 2 rectangulos son excatamente iguales
+    // se usa principalemente en el Delete (FindLeaf), el paper exige que se borre el registro con el mismo rectangulo que se inserto
+    bool operator == (const Rect& o) const {return lo == o.lo && hi == o.hi;}
+
+    //
 };
 
 class RTree()
