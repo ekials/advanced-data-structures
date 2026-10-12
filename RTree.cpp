@@ -210,15 +210,25 @@ class RTree
         RTree& operator = (const RTree&) = delete;
 
 
+        //M : maximo de entradas por nodo
+        //m : minimo y tiene que cumplir 2 <= m <= M/2
+        // alg : que algoritmo de split usar
         
-    //  3.1 Search
-    vector<int> search(const Rect& S) const {
+    //  3.1 Search: La busqueda recorre el arbol desde la raiz comparando los rectangulos delimitadores
+
+    vector<int> search(const Rect& S) const 
+    {
         // TODO: validar S, crear el vector resultado, llamar a la search privada
-        return {};
+        if(!S.isValid()) throw ("rectangulo no valido");
+        vector <int> result;
+        search(root, S, result);
+        return result;
     }
+    
 
     //  3.2 Insert
-    void insert(const Rect& I, int tuple) {
+    void insert(const Rect& I, int tuple) 
+    {
         // TODO: validar I y llamar a insertEntry en el nivel 0
     }
 
@@ -256,11 +266,28 @@ class RTree
         const SplitAlgorithm alg;
         Node* root; 
         //  3.1 Search
-        void search(const Node* T, const Rect& S, vector<int>& out) const {
+        void search(const Node* T, const Rect& S, vector<int>& out) const 
+        {
             // S1. [Buscar en subárboles]
-            // S2. [Buscar en el nodo hoja]
-        }
+            if(!T->isLeaf())
+            {
+                for(const auto& E : T->entries)
+                {
+                    if(E.I.overlaps(S)) search (E.child, S, out);
 
+                }
+            }
+            // S2. [Buscar en el nodo hoja]
+            else
+            {
+                for(const auto& E : T->entries)
+                {
+                    if(E.I.overlaps(S)) out.push_back(E.tuple);
+                }
+            }
+
+        }
+        
         //  3.2 Insert
         //  'level' = nivel destino: 0 para registros nuevos; > 0 al reinsertar (CT6)
         void insertEntry(const Entry& E, int level) {
