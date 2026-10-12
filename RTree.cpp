@@ -97,8 +97,19 @@ Rect combine (const Rect& a, const Rect& b)
     return r;
 }
 
+//2 enlargement : cuando crece el area
+//calulamos cuanto aumenta el area del rectangulo r si le agregamos el rectnagulo add
+// enlargement (r, add) = area (r u add) - area(r)
+// para entender mejor: enlargement = area del nuevo rectangulo combinado - area del rectangulo original
+// si el rectangulo add ya esta completamente dentro de r : combine (r, add) es exacamente igual a r, su area no cambia, por lo que 36 - 36 = 0 (o el valor que sea), el crecimiento es 0 porque no obluga a estirar los limites del contenedor
+// di add esta fuera o parcialmente fuera de r: el rectangulo contenedor tiene que estirarse obligatoriamente para alcanzar los nuevos limites de add, este estiramiento genera una zona extra, puede ser un espacio vacio o dead space, el nro resultante mide exactamente cuanta duperficie extra de area muerta o nueva estamos obligados a abarcar
+//importante porque si elegimos mal el nodo al insertar, los rectangulos empezarian a crecer de manera desproporcionada y a cruzarse demasiados entre si, cuando se realza una busqueda search, el algoritmo se vera obligado a revisar muchisimos mas nodos porque los rectangulos se superponen por todas partes, destruyendo la eficiencia de la estructura
+//asi q enlargement actua como una metrica de castigo: evalua a los candidatos y prioriza siempre al que crezca menos
+// tmb si hay empate en el crecimeinto, se elige el rectangulo que tenga el menor area absoluta (bestarea), la logica es que un rectangulo pequeño y compacto es mejor que uno gigante, aunque ambos crezcan lo mismo
+// uso principal en ChooseLeaf y PickNext
+double enlargement (const Rect& r, const Rect& add){ return combine (r, add).area() - r.area();}
 
-
+//
 class RTree()
 {
     
