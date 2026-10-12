@@ -44,7 +44,6 @@ struct Rect
         return true;
     }
 
-
     //3 operator: comparar si 2 rectangulos son excatamente iguales
     // se usa principalemente en el Delete (FindLeaf), el paper exige que se borre el registro con el mismo rectangulo que se inserto
     bool operator == (const Rect& o) const {return lo == o.lo && hi == o.hi;}
@@ -65,10 +64,40 @@ struct Rect
             return true;
         }
     }
-
-
-
 };
+
+
+//1 Rect combine : el MBR que envuelve dos rectangulos
+//devuelve el rectangulo mas pequeño que contiene completamente a 'a' y ''b'
+//2D (para guiarse TT TT)
+/*
+a:          b:
+┌────┐          ┌──┐
+│    │          │  │
+└────┘          └──┘
+
+//combine(a,b):
+┌──────────────┐
+│              │
+│              │
+└──────────────┘
+*/
+// se usa cuando actualizamos el MBR de un nodo despues de insertar o borrar(adjustTree, condenseTree)
+//tmb dentri de enlargement
+//tmb dentro de los algoritmos split (para calcular el area de cada grupo)
+
+Rect combine (const Rect& a, const Rect& b)
+{
+    Rect r;
+    for(int d = 0; d < DIM; d++)
+    {
+        r.lo[d] = min (a.lo[d], b.lo[d]); //lim inferior:busca el punto de inicio mas a la izq o abajo entre los dos rectangulos, es el menor valor para asegurar que ningun objeto quede fuera por el lado izq o inderior
+        r.hi[d] = max (a.hi[d], b.hi[d]); //lim superior:busca el punto final mas a la derecha o arriba,se elige el mayor para garantizar que cubra totalmente el extremo superior / derecho de ambos
+    }
+    return r;
+}
+
+
 
 class RTree()
 {
