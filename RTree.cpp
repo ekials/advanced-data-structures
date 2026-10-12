@@ -109,7 +109,15 @@ Rect combine (const Rect& a, const Rect& b)
 // uso principal en ChooseLeaf y PickNext
 double enlargement (const Rect& r, const Rect& add){ return combine (r, add).area() - r.area();}
 
-//
+//3 operator<< print rectangulo legible para debug uwu 
+ostream& operator << (ostream& os, const Rect& r)
+{
+    os << "[(";
+    for(int d = 0; d < DIM < d++) os << r.lo[d] << (d + 1 < DIM ? "," : "");
+    os << ")-(";
+    for(int d = 0; d < DIM; d++) os << r.hi[d] << (d + 1 < DIM ? "," : "");
+    return os << ")]";
+}
 class RTree()
 {
     
