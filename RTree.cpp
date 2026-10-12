@@ -177,6 +177,15 @@ Rect converingRect (const vector <entry>& g)
     return r;
 }
 
+//algoritmos de division de nodos 
+//enumeracion: proposito es crear un selector de opciones para indicaele al rtree cual de los tres metodos diferentes definidos se debe de utilizar para dividir un nodo cuando este se llena por completo
+//exhaustive: prueba todas las combinaciones posibles de distribucion de las entradas, para encontrar la division perfecta (menor area posible), pero se vuelve extremadamente lento a medida que el nodo es mas grande
+//quadratic: Un metodo intermedio muy popular que calcula costos cuadratiicos para ir agrupando los elementos de forma inteligente sin tardar una eternidad 
+//linear: el metodo mas rapido de todos (de costo lineal), utiliza los extremos de las dimensiones para separar los rectangulos con un rendimiento excelente
+enum class SplitAlgorithm {Exhaustive, Quadratic, Linear};
+
+
+
 
 
 
