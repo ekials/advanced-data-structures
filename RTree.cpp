@@ -123,7 +123,7 @@ ostream& operator << (ostream& os, const Rect& r)
 //entrada de hoja: (I, tuple-identifier)
 //entrada interna: (I, child-pointer)
 
-struct Node;
+struct Node; //declaracion adelantada y ya
 
 //una entrada del nodo
 //solo uno de los dos es valido segun el nivel
@@ -132,6 +132,28 @@ struct entry
     Rect I; // MBR de esta entrada
     Node* child = nullptr; //child-pointer - solo se usa en nodos internos
     int tuple = -1; // tuple-identifier - solo se usa en hojas
+};
+
+//un nodo el R-Tree
+// level == 0 es hoja
+// level > 0 es nodo interno
+//todas las hojas  estan al mismo nivel 
+// el vector entries puede tener m y M elementos excepto la raiz
+// para entender mejor dentro de cada nodo (carpeta) hay una lista de elementos llamados entries,
+// pensemos en cada entry como una etiqueta o tarjetita que esta pegada dentro de nuestr carpeta 
+// dependiendo si la caja es una hoja o un nodo interno, la tarjetita dice cosas distintas
+// si estamos en una hoja, la tarjetita tiene las coordenadas del obj (rect) y el nro de identificación del obj real (tuple)
+// si estas en un nodo interno: la tarjetiva tiene un rectangulo que envuelve a todo lo que esta abajo (rect) y una flecha o puntero (child) que apunta a otra cada mas pequeña que vuelga de ella
+//para que el arbol no se deforme y funcione rapido, guttman puso reglas estrictas para estas caja
+//1. regla del limite de elementos: una caja no puede tener cualquier cantidad de cosas (M: max de tarjetifas que caben fisicamente en una pagina de disco o en la cada, por ejempllo, si tenemos un max de 50 y metemos 51, la caja revienta y hay que hacer un split osea partirla en 2), m es el min de elementos que debe tener una caja, por ejemplo al menos 2 o la mitad, si una caja se queda con muy poquitos elementos porque borraste cosas, el arbol la desmantela para no desperdiciar espacio, la unica excepcion a esta regla es la caja principal o raiz
+//2. Regla de linea de meta (level): todas las hojas (las cjas del fondo, las que tienen los datos reales) tienen que estar obligatoriamente a la misma profundidad (al mismo nivel), no puede haber una hoja flotando a medio camino, todas tocan el suele del arbol al mismo tiempo
+
+struct Node 
+{
+    explicit Node(int lvl) : level (lvl) {} //crear una caja nueva y asignarle su nivel, que tan arriba o abajo va a estar en el arbol
+    int level;
+    vector <entry> entries;
+    bool isLeaf() const {return level == 0;}
 };
 
 
