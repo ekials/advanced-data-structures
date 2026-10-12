@@ -185,15 +185,236 @@ Rect converingRect (const vector <entry>& g)
 enum class SplitAlgorithm {Exhaustive, Quadratic, Linear};
 
 
+/*
+Propiedades de RTree
+1. Todo nodo hoja tiene entre m y M registros, salvo que sea la raiz
+2- Cada registro (I, tuple) de una hoja: I es el menor rectangulo que contiene al obj
+3. Todo nodo interno tiene entre m y M hijos, salvo que sea la raiz
+4. Cada entrada (I, child) de un nodo interno: I es el menor rectangulo que contiene a los rectangulos del nodo hijo
+5. La raiz tiene al menos dos hijos salvo que sea hoja
+6. Todas las hoajs estan en el mismo nivel
 
+*/
 
-
-
-
-
-class RTree()
+class RTree
 {
-    
+    public:
+        RTree(int maxEntries, int minEntries, SplitAlgorithm splitAlg) 
+        : M(maxEntries), m(minEntries), alg(splitAlg), root(new  Node(0))
+        {
+            if(m < 2 || m > M / 2) throw invalid_argument ("Se requiere 2 <= m <= M/2");
+            if(alg == SplitAlgorithm::Exhaustive && M > 20) throw invalid_argument("el algoritmo exhaustivo solo es viable con M pequeño");
+        }  
+        ~RTree(){ destroySubtree(root);}
+        RTree (const RTree&) = delete;
+        RTree& operator = (const RTree&) = delete;
+
+
+        
+    //  3.1 Search
+    vector<int> search(const Rect& S) const {
+        // TODO: validar S, crear el vector resultado, llamar a la search privada
+        return {};
+    }
+
+    //  3.2 Insert
+    void insert(const Rect& I, int tuple) {
+        // TODO: validar I y llamar a insertEntry en el nivel 0
+    }
+
+    //  3.3 Delete
+    bool remove(const Rect& I, int tuple) {
+        // D1. [Encontrar el nodo que contiene el registro]
+        // D2. [Eliminar el registro]
+        // D3. [Propagar cambios]
+        // D4. [Acortar el árbol]
+        return false;
+    }
+
+    //  3.4 Update
+    bool update(const Rect& oldI, const Rect& newI, int tuple) {
+        // TODO
+        return false;
+    }
+
+    int height() const { return root->level + 1; }
+
+    int size() const { return countRecords(root); }
+
+    string checkProperties() const { return checkNode(root, true); }
+
+    void print() const {
+        cout << "(altura = " << height() << ")\n";
+        print(root, 0);
+    }
+
+
+
+    private:
+        const int m;
+        const int M;
+        const SplitAlgorithm alg;
+        Node* root; 
+        //  3.1 Search
+        void search(const Node* T, const Rect& S, vector<int>& out) const {
+            // S1. [Buscar en subárboles]
+            // S2. [Buscar en el nodo hoja]
+        }
+
+        //  3.2 Insert
+        //  'level' = nivel destino: 0 para registros nuevos; > 0 al reinsertar (CT6)
+        void insertEntry(const Entry& E, int level) {
+            // I1. [Encontrar posición para el nuevo registro]
+            // I2. [Agregar el registro al nodo hoja]
+            // I3. [Propagar cambios hacia arriba]
+            // I4. [Hacer crecer el árbol en altura]
+        }
+
+        // Devuelve el camino desde la raíz hasta el nodo elegido
+        vector<Node*> chooseLeaf(const Rect& I, int level) const {
+            // CL1. [Inicializar]
+            // CL2. [Verificar hoja]
+            // CL3. [Elegir subárbol]
+            // CL4. [Descender hasta llegar a una hoja]
+            return {};
+        }
+
+        // Devuelve el hermano de la raíz si la raíz se dividió, o nullptr
+        Node* adjustTree(const vector<Node*>& path, Node* LL) {
+            // AT1. [Inicializar]
+            // AT2. [Verificar si terminó]
+            // AT3. [Ajustar el rectángulo en la entrada del padre]
+            // AT4. [Propagar el split hacia arriba]
+            // AT5. [Subir al siguiente nivel]
+            return nullptr;
+        }
+
+        //  3.3 Delete
+        // Deja en 'path' el camino desde la raíz hasta la hoja
+        bool findLeaf(Node* T, const Entry& E, vector<Node*>& path) {
+            // FL1. [Buscar en subárboles]
+            // FL2. [Buscar en el nodo hoja]
+            return false;
+        }
+
+        void condenseTree(const vector<Node*>& path) {
+            // CT1. [Inicializar]
+            // CT2. [Encontrar la entrada en el padre]
+            // CT3. [Eliminar nodo con pocas entradas]
+            // CT4. [Ajustar el rectángulo]
+            // CT5. [Subir un nivel]
+            // CT6. [Reinsertar entradas huérfanas]
+        }
+
+        //  3.5 Node Splitting
+        //  N se queda con el grupo 1 y se devuelve un nodo nuevo con el grupo 2
+        Node* splitNode(Node* N) {
+            // TODO: elegir el algoritmo según 'alg', repartir en G1 y G2
+            return nullptr;
+        }
+
+        // 3.5.1 Exhaustive Algorithm
+        void exhaustiveSplit(const vector<Entry>& E, vector<Entry>& G1, vector<Entry>& G2) {
+            // TODO
+        }
+
+        // 3.5.2 Quadratic Split  y  3.5.3 Linear Split
+        //  linear = false -> Quadratic Split;  linear = true -> Linear Split
+        void splitWithSeeds(vector<Entry> E, vector<Entry>& G1, vector<Entry>& G2, bool linear) {
+            // QS1. [Elegir la primera entrada de cada grupo]
+            // QS2. [Verificar si terminó]
+            // QS3. [Seleccionar entrada a asignar]
+        }
+
+        void pickSeeds(const vector<Entry>& E, int& s1, int& s2) const {
+            s1 = 0; s2 = 1;
+            // PS1. [Calcular la ineficiencia de agrupar entradas]
+            // PS2. [Elegir el par más derrochador]
+        }
+
+        int pickNext(const vector<Entry>& E, const Rect& R1, const Rect& R2) const {
+            // PN1. [Determinar el costo de poner cada entrada en cada grupo]
+            // PN2. [Encontrar la entrada con mayor preferencia por un grupo]
+            return 0;
+        }
+
+        void linearPickSeeds(const vector<Entry>& E, int& s1, int& s2) const {
+            s1 = 0; s2 = 1;
+            // LPS1. [Encontrar rectángulos extremos en todas las dimensiones]
+            // LPS2. [Ajustar por la forma del conjunto de rectángulos]
+            // LPS3. [Seleccionar el par más extremo]
+        }
+
+        int linearPickNext(const vector<Entry>&) const {
+            // TODO
+            return 0;
+        }
+
+
+        //  Utilidades
+
+        // Entrada de P que apunta al nodo hijo N  (E_N en el paper)
+        static Entry& entryFor(Node* P, Node* N) {
+            for (auto& e : P->entries)
+                if (e.child == N) return e;
+            throw logic_error("el nodo no es hijo de P");
+        }
+
+        int countRecords(const Node* n) const {
+            if (n->isLeaf()) return (int)n->entries.size();
+            int total = 0;
+            for (const auto& e : n->entries) total += countRecords(e.child);
+            return total;
+        }
+
+        string checkNode(const Node* n, bool isRoot) const {
+            int k = (int)n->entries.size();
+            if (k > M)
+                return "un nodo tiene mas de M entradas";
+            if (!isRoot && k < m)
+                return "propiedad (1)/(3): un nodo no raiz tiene menos de m entradas";
+            if (isRoot && !n->isLeaf() && k < 2)
+                return "propiedad (5): la raiz interna tiene menos de dos hijos";
+            for (const auto& e : n->entries) {
+                if (n->isLeaf()) {
+                    if (e.child) return "una entrada de hoja tiene puntero a hijo";
+                    continue;
+                }
+                if (!e.child) return "una entrada interna no tiene hijo";
+                // Los niveles bajan de a uno hasta 0 => todas las hojas al mismo nivel
+                if (e.child->level != n->level - 1)
+                    return "propiedad (6): las hojas no estan todas al mismo nivel";
+                if (e.child->entries.empty())
+                    return "un nodo hijo esta vacio";
+                if (!(e.I == coveringRect(e.child)))
+                    return "propiedad (4): el rectangulo de una entrada no es el minimo que cubre a su hijo";
+                string err = checkNode(e.child, false);
+                if (!err.empty()) return err;
+            }
+            return "";
+        }
+
+        static void destroySubtree(Node* n) {
+            if (!n->isLeaf())
+                for (auto& e : n->entries) destroySubtree(e.child);
+            delete n;
+        }
+
+        void print(const Node* n, int depth) const {
+            string indent(depth * 4, ' ');
+            cout << indent << (n->isLeaf() ? "Hoja" : "Nodo interno")
+                << " (nivel " << n->level << ", "
+                << n->entries.size() << " entradas)\n";
+            for (const auto& e : n->entries) {
+                cout << indent << "  " << e.I;
+                if (n->isLeaf()) {
+                    cout << "  tuple=" << e.tuple << "\n";
+                } else {
+                    cout << "\n";
+                    print(e.child, depth + 1);
+                }
+            }
+        }
 };
 
 
