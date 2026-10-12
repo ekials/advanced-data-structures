@@ -156,7 +156,26 @@ struct Node
     bool isLeaf() const {return level == 0;}
 };
 
+//3 coveringRect - dos versione
+// estas dos funciones caldulan el MBR minimo que cubre un conjunto de entradas
 
+//Version 1 - a partir de un nodo, calcular el rectangulo minimo contenedor (MBR) que envuelve por completo y de forma ajustada a todas las entradas que se encuentran dentro de un nodo especifico
+ //se usa mucho en AdjustTree, actualizar el MBR del padre tmb CondenseTree, cuando se crea una nueva raiz
+Rect coveringRect (const Node* n)
+{
+    Rect r = n -> entries[0].I; // tomamos la primera entrada como punto de partida
+    for(const auto& e : n ->entries) r = combine (r, e.I); //vamos combinando con el resto de las entradas del nodo
+    return r; // devolver el rectangulo contenedor final
+}
+//version 2 - a  partir de un vector de entradas
+// se usa principalmente dentro de los algoritmos de SSpliy (para caluclar el areda de cada grupo G1 y G2)
+//herramienta de apoyo que trabaja con listas temporales de entradas cuando el arbol esta recalculando divisiones
+Rect converingRect (const vector <entry>& g)
+{
+    Rect r = g[0].I;
+    for (const auto& e : g) r = combine (r, e.I);
+    return r;
+}
 
 
 
