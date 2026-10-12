@@ -118,6 +118,29 @@ ostream& operator << (ostream& os, const Rect& r)
     for(int d = 0; d < DIM; d++) os << r.hi[d] << (d + 1 < DIM ? "," : "");
     return os << ")]";
 }
+
+//entradas y nodos
+//entrada de hoja: (I, tuple-identifier)
+//entrada interna: (I, child-pointer)
+
+struct Node;
+
+//una entrada del nodo
+//solo uno de los dos es valido segun el nivel
+struct entry 
+{
+    Rect I; // MBR de esta entrada
+    Node* child = nullptr; //child-pointer - solo se usa en nodos internos
+    int tuple = -1; // tuple-identifier - solo se usa en hojas
+};
+
+
+
+
+
+
+
+
 class RTree()
 {
     
